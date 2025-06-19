@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+<meta charset="UTF-8">
+<title>Basit TicTacToe Oyunu</title>
+<style>
+  body { font-family: Arial, sans-serif; display:flex; justify-content:center; align-items:center; height:100vh; background:#f0f0f0; }
+  #board { display:grid; grid-template-columns:repeat(3,100px); grid-gap:5px; }
+  .cell { width:100px; height:100px; background:#fff; border:1px solid #333; display:flex; justify-content:center; align-items:center; font-size:2em; cursor:pointer; }
+  #status { margin-top:20px; text-align:center; }
+</style>
+</head>
+<body>
+<div>
+  <div id="board"></div>
+  <div id="status">Sıra: X</div>
+</div>
+<script>
+const board = document.getElementById('board');
+const statusDiv = document.getElementById('status');
+let currentPlayer = 'X';
+let cells = Array.from({ length: 9 }, (_, i) => {
+  const div = document.createElement('div');
+  div.className = 'cell';
+  div.addEventListener('click', () => move(div, i));
+  board.appendChild(div);
+  return div;
+});
+const wins = [
+  [0,1,2],[3,4,5],[6,7,8],
+  [0,3,6],[1,4,7],[2,5,8],
+  [0,4,8],[2,4,6]
+];
+function move(cell, idx) {
+  if (cell.textContent || isGameOver()) return;
+  cell.textContent = currentPlayer;
+  if (checkWin()) {
+    statusDiv.textContent = currentPlayer + ' kazandı!';
+  } else if (cells.every(c => c.textContent)) {
+    statusDiv.textContent = 'Berabere!';
+  } else {
+    currentPlayer = currentPlayer === 'X' ? 'O' : 'X';
+    statusDiv.textContent = 'Sıra: ' + currentPlayer;
+  }
+}
+function checkWin() {
+  return wins.some(combo => combo.every(i => cells[i].textContent === currentPlayer));
+}
+function isGameOver() {
+  return wins.some(combo => combo.every(i => cells[i].textContent === 'X') || combo.every(i => cells[i].textContent === 'O'));
+}
+</script>
+</body>
+</html>
